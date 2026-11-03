@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>神谕碑（Oracle Tablets）设计文档 v0.2 · 宝石商人诸神篇</title>
+<style>
+  :root{
+    --bg:#f7f5ef; --panel:#ffffff; --ink:#23211c; --muted:#6b6657;
+    --line:#e3ddd0; --gold:#b8893b; --gold2:#d8b25c; --accent:#3a6ea5;
+    --green:#3f7d4f; --red:#b0473b; --chip:#efe9da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.7;font-size:15px}
+  .wrap{max-width:920px;margin:0 auto;padding:40px 28px 80px}
+  header{border-bottom:3px double var(--gold);padding-bottom:18px;margin-bottom:8px}
+  h1{font-size:27px;margin:0 0 6px;letter-spacing:.5px}
+  .sub{color:var(--muted);font-size:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .tag{background:var(--chip);border:1px solid var(--line);border-radius:999px;
+    padding:3px 11px;font-size:12px;color:var(--muted)}
+  .tag.hot{background:#f3e6cf;color:#8a5a16;border-color:#e3c691}
+  .tag.done{background:#e7f0e7;color:var(--green);border-color:#cfe0cf}
+  h2{font-size:20px;margin:34px 0 10px;padding-left:11px;border-left:4px solid var(--gold)}
+  h3{font-size:16px;margin:20px 0 6px;color:var(--accent)}
+  p{margin:8px 0}
+  ul,ol{margin:8px 0;padding-left:22px}
+  li{margin:4px 0}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .kpi{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0}
+  .kpi .box{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:12px 14px}
+  .kpi .n{font-size:22px;font-weight:700;color:var(--gold)}
+  .kpi .l{font-size:12px;color:var(--muted)}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{border-bottom:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#f1ead9;color:#5c5132;font-weight:600}
+  tr:last-child td{border-bottom:none}
+  .pill{display:inline-block;border-radius:6px;padding:1px 8px;font-size:12px;font-weight:600}
+  .p-all{background:#e8f0e8;color:var(--green)}
+  .p-mid{background:#fdf0da;color:#9a6a14}
+  .p-high{background:#fbe3df;color:var(--red)}
+  code{background:#f1ead9;border-radius:5px;padding:1px 6px;font-size:13px;
+    font-family:"SF Mono",Menlo,Consolas,monospace;color:#6a4f1d}
+  pre{background:#26241f;color:#f3ead0;border-radius:10px;padding:14px 16px;
+    overflow-x:auto;font-size:12.5px;line-height:1.55;
+    font-family:"SF Mono",Menlo,Consolas,monospace}
+  pre .c{color:#8a8470}
+  pre .k{color:#e6b35a}
+  pre .v{color:#9fd0a0}
+  .note{background:#fff8e8;border:1px solid #ecd9a6;border-left:4px solid var(--gold);
+    border-radius:8px;padding:10px 14px;margin:12px 0;font-size:13.5px}
+  .open{background:#eef3f8;border:1px solid #cfe0ee;border-left:4px solid var(--accent);
+    border-radius:8px;padding:10px 14px;margin:12px 0;font-size:13.5px}
+  .donebox{background:#e7f0e7;border:1px solid #cfe0cf;border-left:4px solid var(--green);
+    border-radius:8px;padding:10px 14px;margin:12px 0;font-size:13.5px}
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:14px 0}
+  .flow .step{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:10px 12px;flex:1;min-width:120px;font-size:13px;position:relative}
+  .flow .step b{display:block;color:var(--accent);margin-bottom:2px}
+  .flow .step.new{background:#fff6e6;border-color:#e6c78a}
+  .flow .step.new b{color:#9a6a14}
+  .flow .arr{display:flex;align-items:center;color:var(--muted);padding:0 6px;font-size:18px}
+  footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:12.5px}
+  .todo{list-style:none;padding-left:0}
+  .todo li{padding:7px 12px;border:1px solid var(--line);border-radius:8px;margin:6px 0;
+    background:var(--panel);font-size:13.5px}
+  .todo .ph{display:inline-block;background:#f1ead9;color:#7a5c1e;border-radius:5px;
+    padding:0 7px;font-size:12px;font-weight:700;margin-right:8px}
+  .todo li.ok{border-color:#cfe0cf;background:#f3f8f3}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>神谕碑 · Oracle Tablets</h1>
+    <div class="sub">《宝石商人诸神篇》新机制设计文档 — 借鉴 Splendor《城巿(The Cities)》即时胜利目标</div>
+    <div class="meta">
+      <span class="tag">状态：v0.2 定稿</span>
+      <span class="tag">日期：2026-10-28</span>
+      <span class="tag hot">优先级：🥇 最高</span>
+      <span class="tag">作者：WorkBuddy</span>
+    </div>
+  </header>
+
+  <div class="kpi">
+    <div class="box"><div class="n">独立模式</div><div class="l">神谕模式单独开关，不与经典/无神混用</div></div>
+    <div class="box"><div class="n">6 条件</div><div class="l">全部通用，无神专属已移除</div></div>
+    <div class="box"><div class="n">引擎✔</div><div class="l">P0+P1 完成，76 断言全过</div></div>
+    <div class="box"><div class="n">UI⏳</div><div class="l">P2 醒目动画+进度位 待做</div></div>
+  </div>
+
+  <div class="donebox"><b>v0.2 变更（来自用户评审）：</b>条件 1/4 提高门槛（4/4 红蓝、5色各2）；条件 6 改为「≥4金币+≥1贵族」；删除原 7（神迹）、8（双神）；最终 <b>6 个全通用条件</b>；结构改为<b>独立「神谕模式」</b>（非永久层）；UI 须<b>醒目+持续动态效果</b>且在<b>原声望位显示每人进度</b>。</div>
+
+  <h2>1. 背景与目标</h2>
+  <div class="panel">
+    <p><b>本体痛点：</b>当前胜利只有一条路——堆到 <code>winVp</code>(默认 15) 声望。后段易陷入「各刷各的、谁先到 15 谁赢」的漫长拖局，缺乏冲刺感与路线博弈。</p>
+    <p><b>借鉴来源：</b>Splendor《城巿》在开局翻开若干「城巿牌」，玩家在<b>回合结束时</b>若满足某城巿条件，可<b>立即获胜</b>，无需先到 15 prestige。</p>
+    <p><b>主题映射：</b>城巿 → <b>神谕碑</b>。众神降下神谕，凡人竞相完成以获神恩（即时胜）。</p>
+    <p><b>关键结构决策（v0.2）：</b>神谕是<b>独立游戏模式</b>（开局可选），<b>不是</b>叠加在所有模式上的常驻层。这样「神谕模式」与「经典模式」「无神模式」互不污染，玩家按需选择。</p>
+  </div>
+
+  <h2>2. 核心机制</h2>
+  <h3>2.1 生命周期</h3>
+  <ul>
+    <li><b>开局：</b>仅当 <code>oracleMode</code> 开启时，按 <code>playerCount + 1</code> 翻开神谕碑（3 人局 4 张），公开陈列于「神谕区」。</li>
+    <li><b>条件：</b>每张碑 = 一个胜利条件（见 §3）。全部基于公开可验证状态。</li>
+    <li><b>判定时机：</b>在 <code>finishTurn</code> 的<b>回合真正结束前</b>（声望终局判定之后、移交回合之前）统一校验当前行动者。</li>
+    <li><b>触发：</b>满足任意一张未认领的碑 → 立即 <code>phase="over"</code>、<code>winner=[pIdx]</code>，发 <code>oracle</code> 事件（覆盖 <code>winVp</code>）。</li>
+    <li><b>认领：</b>触发后该碑标记 <code>claimedBy</code>，从可触发池移除。</li>
+  </ul>
+
+  <h3>2.2 回合结束结算顺序</h3>
+  <div class="flow">
+    <div class="step"><b>动作执行</b>take / buy / reserve …</div>
+    <div class="arr">→</div>
+    <div class="step"><b>贵族结算</b>eligibleNobles → 接待</div>
+    <div class="arr">→</div>
+    <div class="step"><b>声望终局</b>winVp / endTrigger</div>
+    <div class="arr">→</div>
+    <div class="step new"><b>神谕校验</b>checkOracles(pIdx)</div>
+    <div class="arr">→</div>
+    <div class="step"><b>移交 / 胜利</b></div>
+  </div>
+  <pre><span class="c">// logic.js · finishTurn（声望终局判定之后）</span>
+<span class="k">if</span> (st.oracles &amp;&amp; st.oracles.length) {
+  <span class="k">const</span> oc = checkOracles(st, st.turn);
+  <span class="k">if</span> (oc) { events.push({ k: <span class="v">"oracle"</span>, p: st.turn, id: oc.id });
+           st.phase = <span class="v">"over"</span>; st.winner = [st.turn]; <span class="k">return</span>; }
+}</pre>
+
+  <h2>3. 神谕碑条件库（定稿 6 类，全部通用）</h2>
+  <table>
+    <thead><tr><th>#</th><th>类型</th><th>条件</th><th>模式</th><th>难度</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>颜色收藏</td><td>拥有 ≥4 红宝石卡 <b>且</b> ≥4 蓝宝石卡</td><td><span class="pill p-all">通用</span></td><td><span class="pill p-high">高</span></td><td>v0.2 由 3/3 升为 4/4，避免过早触发</td></tr>
+      <tr><td>2</td><td>高阶掌控</td><td>拥有 ≥3 张 3 级卡</td><td><span class="pill p-all">通用</span></td><td><span class="pill p-high">高</span></td><td>需大量投资，后期碑</td></tr>
+      <tr><td>3</td><td>贵族眷顾</td><td>接待 ≥3 名贵族</td><td><span class="pill p-all">通用</span></td><td><span class="pill p-mid">中</span></td><td>与贵族系统强联动</td></tr>
+      <tr><td>4</td><td>彩虹收藏</td><td>5 色各 ≥2 张卡</td><td><span class="pill p-all">通用</span></td><td><span class="pill p-high">高</span></td><td>v0.2 由「各≥1」升为「各≥2」</td></tr>
+      <tr><td>5</td><td>国库丰盈</td><td>手牌宝石数 + 卡牌声望 ≥ 22</td><td><span class="pill p-all">通用</span></td><td><span class="pill p-mid">中</span></td><td>资源型</td></tr>
+      <tr><td>6</td><td>神恩富矿</td><td>持有 ≥4 金币 <b>且</b> 接待 ≥1 名贵族</td><td><span class="pill p-all">通用</span></td><td><span class="pill p-mid">中</span></td><td>v0.2 由「预留大师」改为金币+贵族（避免各玩各的）</td></tr>
+    </tbody>
+  </table>
+  <div class="note">原 7（神迹篆刻·有神）、8（双神同盟·有神）已删除——会造成规则混乱且依赖神力计数。最终 6 类<b>全部通用</b>，无神模式无需过滤。</div>
+
+  <h2>4. 与现有系统的接口</h2>
+  <h3>4.1 数据模型</h3>
+  <pre>st.oracleMode = <span class="k">true</span>;                 <span class="c">// newGame 选项开启</span>
+st.oracles = [                        <span class="c">// 仅 oracleMode 时由 initOracles 填充</span>
+  { id: <span class="v">"oracle_0"</span>, type: <span class="v">"color"</span>,   claimedBy: <span class="k">null</span> },
+  { id: <span class="v">"oracle_1"</span>, type: <span class="v">"nobles"</span>,  claimedBy: <span class="k">null</span> },
+  <span class="c">// …</span>
+];</pre>
+  <h3>4.2 新增函数（已落地，导出可用）</h3>
+  <ul>
+    <li><code>initOracles(st)</code> — 抽 <code>playerCount+1</code> 个互不重复类型。</li>
+    <li><code>oracleSatisfied(st, pIdx, type)</code> — 纯函数判断。</li>
+    <li><code>checkOracles(st, pIdx)</code> — 遍历未认领碑，命中即置 <code>winner</code> 并返回该碑。</li>
+    <li><code>oracleProgress(st, pIdx, oracle)</code> — 返回 <code>{name, desc, parts:[{label,cur,target}]}</code>，供 UI 在<b>声望位</b>渲染每人进度。</li>
+  </ul>
+  <h3>4.3 UI 接口要求（P2，待实现）</h3>
+  <ul>
+    <li><b>独立模式入口：</b>开局设置页增加「神谕模式」开关，与经典/无神并列、互不冲突。</li>
+    <li><b>神谕区醒目：</b>右上（类比贵族区）常驻显示神谕碑，带<b>持续动态效果</b>（如脉冲光晕/流光），强调其为额外胜利路径。</li>
+    <li><b>每人进度在声望位：</b>每个玩家面板<b>原声望显示处</b>叠加其神谕进度（如「红 4/4 ✓ 蓝 4/4 ✓」），让玩家一眼看到离神谕还差多少。</li>
+    <li><b>神谕胜利演出：</b>收到 <code>oracle</code> 事件时播放专属演出。</li>
+  </ul>
+
+  <h2>5. 配置与平衡</h2>
+  <ul>
+    <li><b>碑数量：</b>默认 <code>playerCount + 1</code>（3 人局 4 张）。</li>
+    <li><b>主路关系：</b><code>winVp</code> 仍是主胜利条件；神谕是并行捷径。</li>
+    <li><b>观测（v0.2 实测）：</b>120 局神谕模式 AI 互打（AI 尚不主动追神谕），神谕胜 50 / 声望胜 70，0 崩溃。说明条件在「无意积累」下约 42% 触发——人类主动经营时会更可控；若觉过频，调高条件门槛即可（仅改 <code>ORACLE_TYPES</code> 阈值）。</li>
+  </ul>
+
+  <h2>6. 实现阶段</h2>
+  <ol class="todo">
+    <li class="ok"><span class="ph">P0</span><b>turn-end 守卫</b>：神谕校验接入 <code>finishTurn</code> 声望判定之后，且仅在 <code>st.oracles</code> 非空时执行——非神谕模式零副作用。</li>
+    <li class="ok"><span class="ph">P1</span><b>纯逻辑 + 单测</b>：<code>initOracles</code>/<code>oracleSatisfied</code>/<code>checkOracles</code>/<code>oracleProgress</code> 全部落地，<code>oracle_test.js</code> 76 断言全过（满足即赢 / 差一步不触发 / 进度结构 / 非神谕零回归 / 120 局不崩）。</li>
+    <li><span class="ph">P2</span><b>界面（待实现）</b>：独立模式开关 + 醒目动态神谕区 + 每人进度在声望位 + 神谕胜利演出。</li>
+    <li><span class="ph">P3</span><b>AI 接入</b>：<code>aiChoose</code> 把「距某神谕还差几步」纳入评分（复用 focusColors/目标聚焦思路），让 AI 也会抢神谕，而非纯靠无意积累。</li>
+    <li><span class="ph">P4</span><b>回归与发布</b>：sim_audit 1950 局 0 非法/0 崩溃 + 神谕触发率监控 + 重新发布。</li>
+  </ol>
+
+  <h2>7. 风险与开放问题</h2>
+  <div class="open">
+    <ul>
+      <li><b>触发频率：</b>当前实测约 42%（AI 不主动追）。若过频，调高 <code>ORACLE_TYPES</code> 阈值即可，无需动结构。</li>
+      <li><b>与酒神赐福/永久折扣交互：</b><code>checkOracles</code> 位于 <code>finishTurn</code> 末尾，所有 phase 收尾后，宝石/卡已计入，无时序问题。</li>
+      <li><b>多人同回合满足：</b>取最先匹配者（即时胜语义），无优先级问题。</li>
+      <li><b>UI 动效成本：</b>持续动态效果需控制性能，避免每帧重排；建议 CSS 动画 + 轻量 DOM。</li>
+    </ul>
+  </div>
+
+  <h2>8. 验收标准</h2>
+  <ul>
+    <li><b>单元：</b>满足各类型即 <code>phase="over"</code> 且 <code>winner=[pIdx]</code>；不满足绝不误触发（已覆盖）。</li>
+    <li><b>回归：</b>非神谕模式整局照常；神谕模式 120 局 0 崩溃（已验证）。</li>
+    <li><b>UI（P2 待补）：</b>模式开关生效、神谕区常驻动态、每人进度在声望位正确渲染、神谕胜利演出正常。</li>
+    <li><b>发布：</b>线上链接实测若干局无异常。</li>
+  </ul>
+
+  <footer>
+    宝石商人诸神篇 · 神谕碑设计文档 v0.2 — 引擎定稿，UI(P2)/AI(P3) 待续。<br/>
+    下一步：实现 P2 界面（独立模式开关 + 醒目动态神谕区 + 声望位进度）。
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+MIT License
+
+Copyright (c) 2026 龙心盐 (@ssslumdunk)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+第三方素材授权说明 / Third-Party Asset Licenses
+
+1. 字体：LXGW WenKai（霞鹜文楷）
+   作者：LXGW (https://github.com/lxgw/LxgwWenKai)
+   授权：SIL Open Font License 1.1
+   完整授权文本见 fonts/OFL.txt
+   说明：可自由使用、修改、再分发（含商用），但不得单独售卖字体本身，
+        衍生字体须沿用 OFL 授权。
+
+2. 美术素材（assets/clean/, assets/god_bg/）与背景音乐（assets/audio/）
+   由项目作者使用 AI 生成工具制作，随本项目一同以 MIT 授权发布。
+   生成提示词记录于 card_manifest.json / card_prompts.json / card_overrides.json。
+   如需在自有项目中复用，建议注明来源。
+
+3. Splendor（宝石商人）为 Marc André 设计的桌游，其规则不受版权保护。
+   本项目为独立实现的非商业同人作品，未使用原作的美术素材或商标，
+   与 Space Cowboys / Asmodee 无任何关联。

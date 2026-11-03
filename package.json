@@ -1,0 +1,14 @@
+{
+  "name": "gem-merchant-gods",
+  "version": "1.0.0",
+  "private": true,
+  "description": "宝石商人 · 诸神篇 —— 单文件前端 + Node 权威服务器（网络对战）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}
