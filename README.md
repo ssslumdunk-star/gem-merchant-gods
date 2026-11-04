@@ -4,6 +4,16 @@
 
 > 《宝石商人 · 诸神篇》——以 Splendor 规则为底、叠加希腊神技与神谕竞速的同人桌游，支持中英文一键切换。
 
+## ▶️ Play online · 在线试玩
+
+**Test link · 测试地址：** **https://gem-merchant-gods.app.workbuddy.host/?sharecode=AU3QJCAHO2**
+
+> ⚠️ **This is a temporary test deployment only — it may go offline, be taken down or change at any time, with no notice or uptime guarantee. For regular play, please deploy it yourself (see Quick Start below).**  
+> ⚠️ **这只是临时测试地址——随时可能下线、被更换或失效，不作任何可用性保证。建议自行部署，方式见下方「快速开始」。**
+>
+> The test link serves a **static single-player build** (online multiplayer needs `server.js`, i.e. self-hosting), and its build may lag behind the latest code in this repo.  
+> 测试链接为**静态单人版**（联机对战需 `server.js`，即自行部署），其版本也可能落后于本仓库最新代码。
+
 ![English lobby](screens/14-lobby-en.png)
 
 **Features / 特性**
