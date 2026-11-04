@@ -1655,7 +1655,7 @@ const AUD_QS = (() => { const sc = new URLSearchParams(location.search).get('sha
 const AUD_URL = name => "assets/audio/" + name + AUD_EXT + AUD_QS;
 
 /* 大厅曲库：多首轮换，每局随机一首，避免长听生厌。第一首是默认/兜底。 */
-const HALL_TRACKS = ["bgm_hall", "hall_morning", "hall_midday", "hall_candle", "hall_night"];
+const HALL_TRACKS = ["bgm_hall", "hall_morning", "hall_midday", "hall_candle", "hall_night", "bgm_candle"];
 const HALL_BGM = { list: [], cur: null, idx: -1, failed: false };
 
 const AUD = {

@@ -12,8 +12,10 @@
   **13 位神祇、13 种独门神技**——点石成金、盗火、埋底、封色、换金……
 - **5 Oracle race objectives** that layer on top of any rule set (Color Collection / High Mastery / Noble Favor / Rainbow / Divine Goldmine)
   **5 种神谕竞速目标**，可叠加在任意规则模式之上
-- **60 cards + 11 nobles**, all with individually AI-generated art; **16 music tracks** that react to lobby / oracle / endgame
-  **60 张卡牌 + 11 位贵族**，全部 AI 独立插画；**16 首配乐**随大厅、神谕、终局切换
+- **60 cards + 11 nobles**, all with individually AI-generated art; **16 music tracks** that react to lobby / oracle / endgame — full list in *Soundtrack* below
+  **60 张卡牌 + 11 位贵族**，全部 AI 独立插画；**16 首配乐**随大厅、神谕、终局切换——完整曲目见下方《配乐与场景》
+- **Made for game night with your kids** — turn-based, no timer, and a real arithmetic/strategy workout in disguise（see *Family play* below · 详见下方《亲子同乐》）
+  **为亲子同乐而做**——回合制无倒计时，玩起来是游戏，练起来是算术与规划
 - **Server-authoritative multiplayer** (SSE push + POST actions, zero npm dependencies)
   **服务端权威联机**（SSE 推送 + POST 动作，零第三方依赖）
 - **Single-file frontend** — `index.html` inlines all JS/CSS and packs assets as data URIs
@@ -89,6 +91,83 @@
 **English UI · 英文界面** (zero residual Chinese — verified by an automated text-node scan · 经文本节点自动扫描验证零中文残留)
 
 ![English board](screens/15-board-en.png)
+
+---
+
+## Soundtrack — every track, every scene · 配乐与场景（16 首全收录）
+
+*The ♪ button (top-right) mutes everything. All event SFX (gem taps, buys) and the victory horn are synthesized live with WebAudio — no sound files needed.*  
+*右上角 ♪ 按钮可静音；点击/拿取等事件音效与胜利号角由 WebAudio 实时合成，不依赖音频文件。*
+
+### 1) Lobby & standard matches — hall rotation · 大厅与常规对局（大厅曲库，每局随机换一首、不与上局重复、循环播放）
+
+| # | Track | Scene · 场景 | Feel · 曲风 |
+|---|---|---|---|
+| 1 | `bgm_hall` | Default hall theme; also the fallback whenever audio files can't load · 默认大厅曲，音频文件缺失时的兜底曲 | Warm trade-route melody with harp arpeggios · 温暖商路主题，竖琴琶音 |
+| 2 | `hall_morning` | Rotation — morning lobby · 轮换·晨光大厅 | Bright, gentle start-of-day feel · 晨光轻快 |
+| 3 | `hall_midday` | Rotation — midday market · 轮换·正午集市 | Lively market bustle · 正午集市熙攘 |
+| 4 | `hall_candle` | Rotation — candlelit hall · 轮换·烛光厅堂 | Cozy candlelight variant · 烛光温馨 |
+| 5 | `hall_night` | Rotation — late-night counting house · 轮换·深夜账房 | Calm nocturnal groove · 夜色沉静 |
+| 6 | `bgm_candle` | Rotation — the classic candlelight cut · 轮换·烛光经典版 | Original candle arrangement · 烛光初版编曲 |
+
+> Starting a **new game** re-rolls the track (never twice in a row); Classic & God War matches keep it looping all game.  
+> **开局即随机换一首**（绝不连续重复同一首）；经典／神战局全程循环该曲。
+
+### 2) Oracle matches — one theme per objective · 神谕局专属配乐（按本局神谕整局循环；大厅里开/换神谕时即时试听）
+
+| # | Track | Scene · 场景 | Feel · 曲风 |
+|---|---|---|---|
+| 7 | `oracle_color` | **Color Collection** 颜色收藏 | Bright pentatonic arpeggios, gems clinking · 明亮五声琶音，如宝石碰撞 |
+| 8 | `oracle_high` | **High Mastery** 高阶掌控 | Solemn slow chords with distant bells · 庄严低音长和弦＋远处钟声 |
+| 9 | `oracle_nobles` | **Noble Favor** 贵族眷顾 | Courtly minuet in 3/4 · 宫廷小步舞曲（3/4 拍） |
+| 10 | `oracle_rainbow` | **Rainbow Collection** 彩虹收藏 | Rising & falling scales, climbing bright · 级进音阶上下行，一路爬升 |
+| 11 | `oracle_goldnob` | **Divine Goldmine** 神恩富矿 | Warm bass bed with slow golden bells · 温暖厚实低音＋金钟缓鸣 |
+
+> These play as recorded tracks; if a file is unavailable the **same theme is generated live** by a WebAudio synth arrangement, so an oracle match is never silent.  
+> 优先播实录音轨；文件不可用时由 WebAudio **实时生成同一主题**的合成编曲，神谕局永不静音。
+
+### 3) Endgame sprint · 终局冲刺曲
+
+| # | Track | Scene · 场景 |
+|---|---|---|
+| 12–13 | `final_a` / `final_b` | The moment **any player reaches 70% of the prestige target** (or any oracle hits 70% progress), the hall/oracle theme stops and one of these two loops until the game resolves — random pick each time. · **任一家声望达到目标 70%（或神谕进度 ≥70%）**即切入，两首随机一首循环到终局，回落后恢复原主题。 |
+
+### 4) Results · 结算页
+
+| # | Track | Scene · 场景 |
+|---|---|---|
+| 14–15 | `win_a` / `win_b` | Victory screen, random of two, plays once · 胜利庆典，两首随机一首，播一次 |
+| 16 | `lose_a` | Defeat screen — a gentle elegy, plays once · 败者挽歌，播一次 |
+
+---
+
+## Family play · 亲子同乐（Play it with your kids）
+
+**We'd love to see this game on your family table.** It's fully turn-based with **no timer**, so a parent and a child can play at the same pace — every game becomes face-to-face time instead of parallel screen time.
+
+**Why it's good for kids · 为什么适合孩子**
+
+- **Math in disguise · 玩着就在算数** — counting gems, subtracting permanent discounts from a card's cost, checking "can I afford this yet?" every single turn: addition, subtraction and comparison with a concrete goal.  
+  数宝石、用永久折扣做减法、每回合判断「我买得起吗」——加减法与比大小全在具体目标里完成。
+- **Planning ahead · 训练规划力** — you routinely save up for a card 2–3 turns out, then build an engine (discounts) that pays off for the rest of the game: working memory, sequencing, delayed gratification.  
+  攒两三回合买下目标卡、再用永久折扣滚雪球——工作记忆、步骤规划与延迟满足。
+- **Observation & empathy · 观察与换位** — watch what opponents collect and guess what they'll buy next; nobles and gods make other players' intentions visible.  
+  看对手囤了什么色、猜他下一步买什么——观察力与换位思考。
+- **Patience & grace · 轮流、专注与输赢** — one action per turn, no clock, and a clear finish line; a natural, low-stakes way to practice waiting your turn and losing gracefully.  
+  每回合一个动作、无倒计时、终点看得见——练习轮流等待与坦然面对输赢。
+- **A conversation, not a screen · 一块屏幕，一家人** — the "2 humans + 1 AI" room lets parent and child sit side by side against the AI; narrating your moves turns every turn into a chat.  
+  「2 人 + 1 AI」房局适合家长孩子并肩作战，把每步讲出来，回合就变成了对话。
+
+**Suggested setups by age · 分龄建议**
+
+| Kid · 孩子 | Setup · 推荐配置 |
+|---|---|
+| ~6+, learning to count · 会数数（约 6+） | **Classic mode · 经典模式** (no god powers) + **12-point Quick target · 12 分快局**; parent and child take the two human seats vs AI. · 家长孩子各坐一个人位，对手用 AI。 |
+| ~8+, comfortable with addition · 加减法熟练（约 8+） | **God War · 神战模式** with friendly gods (Midas, Poseidon) or the **Color Collection oracle** — a visible, concrete goal to chase. · 选米达斯／波塞冬这类直观神技，或开「颜色收藏」神谕给出看得见的目标。 |
+| Whole family · 全家一起 | Play it out loud: everyone says *why* before they act — the game becomes a family strategy meeting. · 每步先说「我为什么这么走」，把游戏变成家庭战略会。 |
+
+**No pressure, just play.** Longer sessions are fine too: there is no turn timer anywhere in the game.  
+**没有时限，慢慢玩**——全游戏无回合倒计时，想多久都行。
 
 ---
 
@@ -253,6 +332,8 @@ node dom_test.js
 ---
 
 # 中文版
+
+> 16 首配乐的完整场景清单见上方《**Soundtrack — 配乐与场景**》一节，亲子同乐的玩法与分龄建议见上方《**Family play · 亲子同乐**》——两节均为中英对照。
 
 ## 快速开始
 
