@@ -64,17 +64,18 @@
   }
 
   function cacheText(node) {
-    // 仅当尚未缓存、且当前值仍含中文时才缓存（避免把已翻译的英文覆盖掉 __zh，破坏切回中文）
-    if (node.__zh === undefined && node.nodeValue && hasCJK(node.nodeValue)) {
-      node.__zh = node.nodeValue;
-    }
+    // 只要当前值含中文，就视作「游戏写入的新原文」并刷新缓存：
+    // 英文模式下引擎自己只写英文（非中文），不会污染；游戏代码重写节点（如回合提示）时拿到的是最新中文。
+    if (node.nodeValue && hasCJK(node.nodeValue)) node.__zh = node.nodeValue;
   }
   function trTextNode(node) {
     var p = node.parentNode;
     if (!p || SKIP_TAGS[p.tagName]) return;
+    if (p.closest && p.closest("[data-noi18n]")) return;   // 标记为不翻译的子树（切换按钮等）
     cacheText(node);
+    if (node.__zh === undefined) return;   // 无中文原文（空格/纯英文/SVG 结构）——绝不能动，否则会被写成字面量 "undefined"
     var out = trTextValue(node.__zh);
-    if (out !== node.nodeValue) node.nodeValue = out;
+    if (out !== node.__zh && out !== node.nodeValue) node.nodeValue = out;
   }
 
   function trAttrs(el) {
@@ -95,6 +96,7 @@
   function translateEl(el) {
     if (!el || el.nodeType !== 1) return;
     if (SKIP_TAGS[el.tagName]) return;
+    if (el.closest && el.closest("[data-noi18n]")) return;   // 标记为不翻译的子树（切换按钮等）
     trAttrs(el);
     var t = normText(el.textContent || "");
     if (t && I18N_DATA.HTML && I18N_DATA.HTML[t] !== undefined) {
@@ -182,6 +184,7 @@
       if (I18N.lang === "zh-CN" || _suppress) return;
       _suppress = true;
       _obs.disconnect();           // 处理期间断开，避免自己写的 DOM 又触发回调
+      _obs = null;                 // 必须置空，否则下方 startObserver 因 _obs 存在而提前 return，观察器永久失效
       try { handleMuts(muts); } catch (e) {}
       startObserver();              // 重新连接（_obs 已被置空，可重建）
       _suppress = false;
@@ -217,6 +220,7 @@
   function addToggleButton() {
     var b = document.createElement("button");
     b.id = "i18nToggle";
+    b.setAttribute("data-noi18n", "");   // 自身文案由 syncBtn 管理，不进翻译（否则「中」会被 WORDS 误伤）
     b.textContent = "EN";
     b.style.cssText = "position:fixed;top:8px;right:8px;z-index:99999;" +
       "padding:4px 10px;font-size:12px;border:1px solid rgba(255,255,255,.4);" +

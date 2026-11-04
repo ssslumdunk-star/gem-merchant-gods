@@ -74,18 +74,18 @@ TR["我的资产手上的宝石是一次性的，折扣是永久的"] = "My Asse
 TR["贵族来访要的是永久折扣，不是手上的宝石"] = "Visiting nobles want your permanent discount, not the gems in your hand"
 TR["还没有战绩。打完一局再回来看看。"] = "No records yet. Come back after you finish a game."
 TR["永久折扣：还没有"] = "Permanent discount: none yet"
-TR["AI 胜率18.7%"] = "<span>AI sim winrate</span><b>18.7%</b>"
-TR["AI 胜率37.3%"] = "<span>AI sim winrate</span><b>37.3%</b>"
-TR["AI 胜率24.7%"] = "<span>AI sim winrate</span><b>24.7%</b>"
-TR["AI 胜率63.3%"] = "<span>AI sim winrate</span><b>63.3%</b>"
-TR["AI 胜率17.3%"] = "<span>AI sim winrate</span><b>17.3%</b>"
-TR["AI 胜率21.3%"] = "<span>AI sim winrate</span><b>21.3%</b>"
-TR["AI 胜率68.7%"] = "<span>AI sim winrate</span><b>68.7%</b>"
-TR["AI 胜率14%"] = "<span>AI sim winrate</span><b>14%</b>"
-TR["AI 胜率56%"] = "<span>AI sim winrate</span><b>56%</b>"
-TR["AI 胜率30%"] = "<span>AI sim winrate</span><b>30%</b>"
-TR["AI 胜率24%"] = "<span>AI sim winrate</span><b>24%</b>"
-TR["AI 胜率48%"] = "<span>AI sim winrate</span><b>48%</b>"
+TR["AI 胜率18.7%"] = "<span>AI sim winrate </span><b>18.7%</b>"
+TR["AI 胜率37.3%"] = "<span>AI sim winrate </span><b>37.3%</b>"
+TR["AI 胜率24.7%"] = "<span>AI sim winrate </span><b>24.7%</b>"
+TR["AI 胜率63.3%"] = "<span>AI sim winrate </span><b>63.3%</b>"
+TR["AI 胜率17.3%"] = "<span>AI sim winrate </span><b>17.3%</b>"
+TR["AI 胜率21.3%"] = "<span>AI sim winrate </span><b>21.3%</b>"
+TR["AI 胜率68.7%"] = "<span>AI sim winrate </span><b>68.7%</b>"
+TR["AI 胜率14%"] = "<span>AI sim winrate </span><b>14%</b>"
+TR["AI 胜率56%"] = "<span>AI sim winrate </span><b>56%</b>"
+TR["AI 胜率30%"] = "<span>AI sim winrate </span><b>30%</b>"
+TR["AI 胜率24%"] = "<span>AI sim winrate </span><b>24%</b>"
+TR["AI 胜率48%"] = "<span>AI sim winrate </span><b>48%</b>"
 TR["12快局"] = "<b>12</b><em>Quick</em>"
 TR["15标准"] = "<b>15</b><em>Standard</em>"
 TR["18中局"] = "<b>18</b><em>Mid</em>"
@@ -291,6 +291,9 @@ ATTR["堤丰"] = "Typhon"
 ATTR["房主"] = "Host"
 ATTR["宙斯"] = "Zeus"
 ATTR["赫拉"] = "Hera"
+# 对局内静态 title（采集器没跑到的悬停提示）
+ATTR["对手压牌（预留）的卡公开可见；买下后获得其永久折扣"] = "Opponent's reserved cards are public; buying grants their permanent discount"
+ATTR["永久折扣：购卡获得，买卡时该色费用 -1"] = "Permanent discount: gained on purchase; -1 on that color's cost"
 
 # ---------- 4. 数据实体 WORDS（神/贵族/神谕/颜色/卡名）----------
 data = json.load(open(os.path.join(ROOT, "i18n_data.json"), encoding="utf-8"))
@@ -301,8 +304,20 @@ WORDS.update({
     "红宝石": "Ruby", "玛瑙": "Onyx", "黄金": "Gold",
 })
 # tiers / 难度
+# 注意：不要放单字「高/中/低」做碎片键——「中」会把「手中/中局」打成手Medium。
+# 难度只在「难度 高」这种上下文出现，用整短语做键最安全。
 WORDS.update({"强势": "Dominant", "均衡": "Balanced", "冷门": "Underdog",
-              "高": "Hard", "中": "Medium", "低": "Easy"})
+              "难度 高": "difficulty Hard", "难度 中": "difficulty Medium", "难度 低": "difficulty Easy"})
+# 对局内人物（真人默认名 + AI 名 + 职位），日志与面板共用
+WORDS.update({
+    "薇拉": "Vera", "艾可": "Echo", "皮帕": "Pippa",
+    "见习商人": "Apprentice Merchant", "学院经纪人": "Academy Broker", "矿工鉴定师": "Mining Assayer",
+})
+# 拼接碎片（日志/面板把颜色名、人名插进句子后剩下的中文零件）
+WORDS.update({
+    "、": ", ",
+    "（你）": " (you)",
+})
 # gods
 GOD_EN = {
     "midas": ("Midas", "The Golden Touch"),
@@ -352,7 +367,8 @@ ORACLE_EN = {
 for o in data["oracles"]:
     WORDS[o["name"]] = ORACLE_EN[o["key"]][0]
     WORDS[o["desc"]] = ORACLE_EN[o["key"]][1]
-    WORDS[o["difficulty"]] = ORACLE_EN[o["key"]][2]
+    # 难度不要按单字入键（o["difficulty"] 是「高/中/低」，会误伤「手中/中局」）；
+    # 渲染处是「难度 高」整句，用上面的短语键即可
 # phrases
 WORDS["AI 模拟胜率"] = "AI sim winrate"
 WORDS["声望"] = "prestige"
@@ -361,6 +377,8 @@ WORDS["神谕"] = "Oracle"
 
 # 动态句片段（对局内由颜色名/数字拼出，无法逐条列举，用子串兜底）
 WORDS["折扣"] = "discount"
+WORDS["永久折扣"] = " permanent discount"   # 带前导空格：中文「翡翠永久折扣」拼英文时才不粘连
+WORDS["折 "] = "discount "                 # 对局面板「折 —」「折 1 2」的前缀
 WORDS["该色"] = "this color"
 WORDS["费用"] = "cost"
 WORDS["无声望"] = "no prestige"
@@ -369,6 +387,15 @@ WORDS["需 "] = "need "            # 与"需要"区分：带尾随空格，只�
 WORDS["已有 "] = "have "
 WORDS["级"] = " tier"
 WORDS["买后永久 +1"] = "after buying: permanent +1"
+# 动态 UI/日志碎片（正则表未覆盖时的兜底子串）
+WORDS["＋恩赐"] = " + gift "       # 「已选：红宝石＋恩赐翡翠」
+WORDS["恩赐"] = " gift "           # 日志「，海神恩赐 翡翠」
+WORDS["咒封"] = " lock "           # 「（咒封翡翠）」
+WORDS["（弃"] = " (discard "       # 「（弃翡翠换金）」——长键先于「（」
+WORDS["换金）"] = " for gold) "
+WORDS["（"] = "("                  # 全角括号归一（长键都排在前面，不会互相踩）
+WORDS["）"] = ")"
+WORDS["·"] = " · "                # 中点两侧补空格，神名/标题拼接不粘连（已含空格的不受影响）
 WORDS["购买后 +1"] = "after buying: +1"
 WORDS["永久 +1"] = "permanent +1"
 WORDS["购卡时该色费用"] = "this color's cost when buying"
@@ -419,6 +446,7 @@ PATTERNS = [
     [r"^赫拉（(.+)）拒绝了 (.+?)，获得 1 声望$", "Hera ($1) declined $2, gaining 1 prestige"],
     [r"^(.+) 无事可做，暂过一回合$", "$1 had nothing to do, passing a turn"],
     [r"^(.+) 点金：一枚(.+?)化作黄金$", "$1's touch: one $2 turned to gold"],
+    [r"^(.+?) 拿取 (.+?)，海神恩赐 (.+)$", "$1 took $2; sea-god gift $3"],
     [r"^(.+) 拿取 (.+?)(?: 并得 1 黄金)?$", "$1 took $2"],
     [r"^太阳战车：弃(.+?)换得一金$", "Sun-Chariot: discarded $1 for 1 gold"],
     [r"^(.+) 从 (.+?) 处窃取了 (.+?)$", "$1 stole $3 from $2"],
@@ -428,6 +456,13 @@ PATTERNS = [
     [r"^(.+) 预留了一张卡(?: 并获得黄金)?$", "$1 reserved a card"],
     [r"^(.+) 购买 (.+?)(?: \+(\d+)声望)?$", "$1 bought $2"],
     [r"^(.+) 盗取了 (.+?) 的宝石之力（余 (\d+) 次）$", "$1 stole the gem-power of $2 ($3 uses left)"],
+    [r"（盗火余 (\d+) 次）", " ($1 fire-theft uses left)"],
+    [r"🔥 盗火（余\s*(\d+)）", "🔥 Fire-Theft ($1 left)"],
+    [r"^(.+?) 预留了一张卡并获得黄金$", "$1 reserved a card and gained Gold"],
+    [r"^宝石超限！点击下方你的宝石退还 (\d+) 枚（已选 (\d+)/(\d+)）$",
+     "Token limit! Tap the gems below to return $1 (selected $2/$3)"],
+    [r"^宝石超限！点击下方你的宝石退还 (\d+) 枚（点这里自动选）$",
+     "Token limit! Tap the gems below to return $1 (tap here to auto-select)"],
     [r"^(.+) 将一张 (\d+) 级明牌 (.+?) 埋入牌底$", "$1 buried a level-$2 face-up card, $3, to the bottom"],
     # ---- toast（固定）----
     [r"^操作未被接受：(.+)$", "Action not accepted: $1"],
@@ -474,6 +509,20 @@ PATTERNS = [
     [r"^创建失败：(.+)$", "Create failed: $1"],
     [r"^加入失败：(.+)$", "Join failed: $1"],
     [r"^开局失败：(.+)$", "Start failed: $1"],
+    # ---- 对局面板动态叶子（带数字/拼接，采集器覆盖不到）----
+    [r"^压牌 (\d+)/(\d+)$", "Reserve $1/$2"],
+    [r"^种子 (\d+)$", "Seed $1"],
+    [r"^声望 / 目标 (\d+)$", "prestige / target $1"],
+    [r"^手中宝石筹码（超出上限，请点击退还 (\d+) 枚）$", "Hand tokens (over the cap - return $1)"],
+    [r"^你已满足神祇来访条件 —— 选择一位（可获得 (\d+) 声望）$", "You meet a noble's condition - choose one (gain $1 prestige)"],
+    # 预留卡的悬停 title：先带声望的、后不带的（顺序不能反）
+    [r"^压牌：(.+) · (.+永久折扣) · \+(\d+) 声望$", "Reserved: $1 · $2 · +$3 prestige"],
+    [r"^压牌：(.+) · (.+)永久折扣$", "Reserved: $1 · $2 permanent discount"],
+    # ---- 宝石选择/神技按钮的动态提示 ----
+    [r"^已选：(.+)$", "selected: $1"],
+    [r"^再点一次(.+?)可拿 (\d+) 枚$", "tap $1 again to take $2"],
+    [r"^点两下可拿 (\d+) 枚(.+?)（桌上 ≥(\d+) 枚才可）$", "double-tap to take $1 × $2 (needs ≥$3 on the table)"],
+    [r"^池里无(.+?)，或普通宝石不足 (\d+) 枚$", "no $1 in the pool, or fewer than $2 ordinary gems"],
 ]
 
 # ---------- 5.5 额外手工补充（采集器未覆盖的叶子文本）----------
@@ -481,14 +530,49 @@ PATTERNS = [
 # 以「合成 block」方式并入，使其走 TEXT 词典（无内联标签）。
 EXTRA = {
     "宝石商人 · 璀璨商路": "Gem Merchant · The Lustrous Trade Route",
-    "每回合拿宝石 / 预留 / 购牌 三选一 · 达到": "Each turn: take gems / reserve / buy — pick one · reach",
-    "声望触发终局 · 率先达线者胜": "prestige to trigger the endgame · first to cross the line wins",
+    "每回合拿宝石 / 预留 / 购牌 三选一 · 达到": "Each turn: take gems / reserve / buy — pick one \u00b7 reach ",
+    "声望触发终局 · 率先达线者胜": " prestige to trigger the endgame \u00b7 first to cross the line wins",
     "宝石商人与诸神": "Gem Merchants & The Gods",
+    # ---- 对局面板静态叶子（采集器未跑到/渲染晚于采集）----
+    "跳过": "Skip",
+    "预 留": "Reserve",
+    "暂无": "none",
+    "确 认": "CONFIRM",
+    "取 消": "CANCEL",
+    "永久折扣（买卡 -1，永久生效）": "Permanent discount (-1 per card, always in effect)",
+    "手中宝石筹码（买卡消耗 · 上限10枚）": "Hand tokens (spent to buy, cap 10)",
+    "购卡后获得": "from purchases",
+    "预留牌（≤3）": "Reserved (max 3)",
+    "来访贵族": "Nobles visiting",
+    "贵族来访": "Nobles visit",
+    "✨ 点石成金": "✨ Midas Touch",
+    "✨ 点石成金 —— 点击下方宝石选 2 枚弃掉换 1 金": "✨ Midas Touch — tap gems below, pick 2 to discard for 1 gold",
+    "桌上宝石已空且暂无力购牌 —— 无事可做": "The table is out of gems and you can't afford a card - nothing to do",
+    "确 认 拿 取": "TAKE",
+    "无宝石": "no gems",
+    "金": "$",                 # 金币 SVG 上的字符（图形符号，走文本节点）
 }
 for _k, _v in EXTRA.items():
     if _k not in TR:
         TR[_k] = _v
     blocks.append({"zh": _k, "html": _k, "tag": "div", "n": 1})
+
+# ---------- 5.6 富文本提示（代码内含 <b>，按整块 textContent 查表，value 里还原标签）----------
+# 引擎 HTML 块匹配用的是 normText(el.textContent)，所以字典 key 必须是「去掉标签后的纯文本」；
+# 合成 block 的 html 字段带上标签，只为把这条路由进 HTML 表（值里同样带标签，替换 innerHTML 后保留加粗）。
+EXTRA_RICH = {
+    "拿宝石：点下方宝石，选满 3 枚不同色再点「拿取」；也可以点卡预留换 1 枚黄金。":
+        "Take gems: tap the gems below and pick <b>3 of different colors</b>, then tap \"Take\"; or tap a card to <b>reserve</b> it for 1 gold.",
+    "盯一张 1 级卡攒颜色：卡上写着要哪几色，缺哪色拿哪色。攒两三回合才买得起，是正常的。":
+        "Watch a <b>level-1 card</b> and collect its colors: the card lists what it needs — <b>grab whichever color you're missing</b>. Taking two or three turns to afford it is normal.",
+    "颜色够了就点卡购买：买下后该色永久 +1 折扣，不消耗、越攒越强。":
+        "Once you have the colors, <b>tap the card to buy</b>: it grants a <b>permanent +1 discount</b> in that color — never spent, and it stacks.",
+    "折扣够了贵族会自动来访（+4 声望，不占回合）。声望到线即触发终局。":
+        "With enough discounts <b>nobles visit you automatically</b> (+4 prestige, costs no turn). Reaching the prestige target triggers the endgame.",
+}
+for _k, _v in EXTRA_RICH.items():
+    TR[_k] = _v
+    blocks.append({"zh": _k, "html": "<b>" + _k + "</b>", "tag": "span", "n": 1})
 
 # ---------- 6. 写出 i18n_en.js ----------
 def jsesc(s):
@@ -517,11 +601,19 @@ for i, b in enumerate(blocks):
     lines.append("    %s: '%s'%s" % (json.dumps(zh, ensure_ascii=False), jsesc(en), "," if i < len(blocks)-1 else ""))
 lines.append("  },")
 lines.append("  ATTR: {")
+emitted = set()
 for i, a in enumerate(attrs):
     en = ATTR.get(a)
     if en is None:
         continue
-    lines.append("    %s: '%s'%s" % (json.dumps(a, ensure_ascii=False), jsesc(en), "," if i < len(attrs)-1 else ""))
+    emitted.add(a)
+    # 恒定带逗号：后面可能还有「采集外」的补充键，尾逗号在 JS 里合法
+    lines.append("    %s: '%s'," % (json.dumps(a, ensure_ascii=False), jsesc(en)))
+# 采集器没跑到、但代码里写死的 title（对手压牌行、折扣行等）也要输出
+for a, en in ATTR.items():
+    if a in emitted:
+        continue
+    lines.append("    %s: '%s'," % (json.dumps(a, ensure_ascii=False), jsesc(en)))
 lines.append("  },")
 lines.append("  WORDS: {")
 wk = list(WORDS.keys())

@@ -332,6 +332,22 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  /* --- 根目录脚本（i18n 引擎与英文词典等，与 index.html 同级） --- */
+  if (req.method === "GET" && /^\/[A-Za-z0-9_-]+\.js$/.test(p)) {
+    const fp = path.join(HERE, p.slice(1));
+    if (!fp.startsWith(HERE + path.sep)) { res.writeHead(403); return res.end(); }
+    fs.readFile(fp, (err, buf) => {
+      if (err) { res.writeHead(404); return res.end("missing " + p.slice(1)); }
+      res.writeHead(200, {
+        "Content-Type": "application/javascript; charset=utf-8",
+        "Cache-Control": "no-cache, must-revalidate",
+        "Content-Length": buf.length
+      });
+      res.end(buf);
+    });
+    return;
+  }
+
   /* --- 静态资源（assets/：音频、图片等，本地测试需要完整资源才有音乐） --- */
   if (req.method === "GET" && p.startsWith("/assets/")) {
     const rel = path.normalize(p.replace(/^\/+/, "")).replace(/^(\.\.[/\\])+/, "");
